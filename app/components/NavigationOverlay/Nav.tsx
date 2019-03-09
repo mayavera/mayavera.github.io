@@ -9,6 +9,7 @@ const links: LinkGroups = {
     { title: 'waveform', url: '/waveform' },
     { title: 'spectrum', url: '/spectrum' },
     { title: 'motion', url: '/motion' },
+    { title: 'device', url: '/device' }
   ],
   links: [
     { title: 'github', url: 'https://github.com/mayavera' },

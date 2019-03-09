@@ -6,6 +6,7 @@ import Playground from '../Playground'
 import Waveform from '../Waveform'
 import Spectrum from '../Spectrum'
 import Motion from '../Motion'
+import Device from '../Device'
 import c from './App.scss'
 
 //TODO: upgrade react-conway to version with typescript
@@ -30,6 +31,7 @@ const App = () => (
       <Route exact path='/waveform' component={content(Waveform)} />
       <Route exact path='/spectrum' component={content(Spectrum)} />
       <Route exact path='/motion' component={content(Motion)}/>
+      <Route exact path='/device' component={content(Device)}/>
     </div>
   </div>
 )
