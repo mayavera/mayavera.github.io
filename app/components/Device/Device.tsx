@@ -12,6 +12,14 @@ interface State {
     beta: number;
     gamma: number;
   };
+  deviceProximity?: {
+    deviceMax: number;
+    deviceMin: number;
+    deviceValue: number;
+  };
+  userProximity?: {
+    userNear: boolean;
+  };
 }
 
 export default class Device extends React.Component<Props, State> {
@@ -21,12 +29,18 @@ export default class Device extends React.Component<Props, State> {
     if ((window as any).DeviceOrientationEvent) {
       window.addEventListener("deviceorientation", this.handleOrientationChange);
     }
+
+    window.addEventListener('deviceproximity', this.handleDeviceProximityChange)
+    window.addEventListener('userproximity', this.handleUserProximityChange)
   }
 
   public componentWillUnmount() {
     if ((window as any).DeviceOrientationEvent) {
       window.removeEventListener("deviceorientation", this.handleOrientationChange);
     }
+
+    window.removeEventListener('deviceproximity', this.handleDeviceProximityChange)
+    window.removeEventListener('userproximity', this.handleUserProximityChange)
   }
 
   private handleOrientationChange = (event: DeviceOrientationEvent) => {
@@ -39,15 +53,67 @@ export default class Device extends React.Component<Props, State> {
     })
   }
 
+  private handleDeviceProximityChange = (event: any) => {
+    this.setState({
+      deviceProximity: {
+        deviceMax: event.max as number,
+        deviceMin: event.min as number,
+        deviceValue: event.value as number
+      }
+    })
+  }
+
+  private handleUserProximityChange = (event: any) => {
+    this.setState({
+      userProximity: {
+        userNear: event.near
+      }
+    });
+  }
+
   public render() {
-    const { orientation } = this.state
+    const { orientation, userProximity, deviceProximity } = this.state
 
     return (
       <div className={classnames(this.props.className, c.device)}>
         <div>
-          <div>Alpha: {orientation ? Math.round(orientation.alpha) : 'Unknown'}</div>
-          <div>Beta: {orientation ? Math.round(orientation.beta) : 'Unknown'}</div>
-          <div>Gamma: {orientation ? Math.round(orientation.gamma) : 'Unknown'}</div>
+          <h2>Orientation</h2>
+          <table>
+            <tr>
+              <td>Alpha</td>
+              <td>{orientation ? Math.round(orientation.alpha) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Beta</td>
+              <td>{orientation ? Math.round(orientation.beta) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Gamma</td>
+              <td>{orientation ? Math.round(orientation.gamma) : 'Unknown'}</td>
+            </tr>
+          </table>
+          <h2>User Proximity</h2>
+          <table>
+            <tr>
+              <td>User Near</td>
+              <td>{userProximity ? userProximity.userNear : 'Unknown'}</td>
+            </tr>
+          </table>
+          <h2>Device Proximity</h2>
+          <table>
+            <tr>
+              <td>Min</td>
+              <td>{deviceProximity ? Math.round(deviceProximity.deviceMin) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Max</td>
+              <td>{deviceProximity ? Math.round(deviceProximity.deviceMax) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Value</td>
+              <td>{deviceProximity ? Math.round(deviceProximity.deviceValue) : 'Unknown'}</td>
+            </tr>
+          </table>
         </div>
       </div>
     )
