@@ -11,6 +11,7 @@ interface State {
     alpha: number;
     beta: number;
     gamma: number;
+    absolute: boolean;
   };
   deviceProximity?: {
     deviceMax: number;
@@ -48,7 +49,8 @@ export default class Device extends React.Component<Props, State> {
       orientation: {
         alpha: event.alpha,
         gamma: event.gamma, 
-        beta: event.beta
+        beta: event.beta,
+        absolute: event.absolute
       }
     })
   }
@@ -90,6 +92,10 @@ export default class Device extends React.Component<Props, State> {
             <tr>
               <td>Gamma</td>
               <td>{orientation ? Math.round(orientation.gamma) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Absolute</td>
+              <td>{orientation ? (orientation.absolute ? 'true' : 'false') : 'Unknown'}</td>
             </tr>
           </table>
           <h2>User Proximity</h2>
