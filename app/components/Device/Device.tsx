@@ -1,73 +1,18 @@
 import React from 'react'
 import classnames from 'classnames'
+import { compose } from 'redux'
+import withMotion, { WrappedProps as MotionProps } from '../../hoc/withMotion'
+import withOrientation, { WrappedProps as OrientationProps } from '../../hoc/withOrientation'
 import c from './Device.scss'
 
-interface Props {
+interface Props extends MotionProps, OrientationProps {
   className?: string;
 }
 
-interface State {
-  orientation?: {
-    alpha: number;
-    beta: number;
-    gamma: number;
-    absolute: boolean;
-  };
-  motion?: {
-    acceleration: DeviceAcceleration;
-    accelerationIncludingGravity: DeviceAcceleration;
-    rotationRate: DeviceRotationRate;
-    interval: number;
-  };
-}
-
-export default class Device extends React.Component<Props, State> {
-  public readonly state: State = {}
-
-  public componentDidMount() {
-    if ((window as any).DeviceOrientationEvent) {
-      window.addEventListener("deviceorientation", this.handleOrientationChange);
-    }
-
-    if ((window as any).DeviceMotionEvent) {
-      window.addEventListener("devicemotion", this.handleMotionChange);
-    }
-  }
-
-  public componentWillUnmount() {
-    if ((window as any).DeviceOrientationEvent) {
-      window.removeEventListener("deviceorientation", this.handleOrientationChange);
-    }
-
-    if ((window as any).DeviceMotionEvent) {
-      window.removeEventListener("devicemotion", this.handleMotionChange);
-    }
-  }
-
-  private handleOrientationChange = (event: DeviceOrientationEvent) => {
-    this.setState({
-      orientation: {
-        alpha: event.alpha,
-        gamma: event.gamma, 
-        beta: event.beta,
-        absolute: event.absolute
-      }
-    })
-  }
-
-  private handleMotionChange = (event: DeviceMotionEvent) => {
-    this.setState({
-      motion: {
-        acceleration: event.acceleration,
-        accelerationIncludingGravity: event.accelerationIncludingGravity, 
-        rotationRate: event.rotationRate,
-        interval: event.interval
-      }
-    })
-  }
+class Device extends React.Component<Props> {
 
   public render() {
-    const { orientation, motion } = this.state
+    const { orientation, motion } = this.props
 
     return (
       <div className={classnames(this.props.className, c.device)}>
@@ -125,3 +70,8 @@ export default class Device extends React.Component<Props, State> {
     )
   }
 }
+
+export default compose(
+  withMotion,
+  withOrientation
+)(Device)
