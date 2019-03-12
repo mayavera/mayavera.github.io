@@ -13,6 +13,12 @@ interface State {
     gamma: number;
     absolute: boolean;
   };
+  motion?: {
+    acceleration: DeviceAcceleration;
+    accelerationIncludingGravity: DeviceAcceleration;
+    rotationRate: DeviceRotationRate;
+    interval: number;
+  };
   deviceProximity?: {
     deviceMax: number;
     deviceMin: number;
@@ -31,6 +37,10 @@ export default class Device extends React.Component<Props, State> {
       window.addEventListener("deviceorientation", this.handleOrientationChange);
     }
 
+    if ((window as any).DeviceMotionEvent) {
+      window.addEventListener("devicemotion", this.handleMotionChange);
+    }
+
     window.addEventListener('deviceproximity', this.handleDeviceProximityChange)
     window.addEventListener('userproximity', this.handleUserProximityChange)
   }
@@ -38,6 +48,10 @@ export default class Device extends React.Component<Props, State> {
   public componentWillUnmount() {
     if ((window as any).DeviceOrientationEvent) {
       window.removeEventListener("deviceorientation", this.handleOrientationChange);
+    }
+
+    if ((window as any).DeviceMotionEvent) {
+      window.removeEventListener("devicemotion", this.handleMotionChange);
     }
 
     window.removeEventListener('deviceproximity', this.handleDeviceProximityChange)
@@ -51,6 +65,17 @@ export default class Device extends React.Component<Props, State> {
         gamma: event.gamma, 
         beta: event.beta,
         absolute: event.absolute
+      }
+    })
+  }
+
+  private handleMotionChange = (event: DeviceMotionEvent) => {
+    this.setState({
+      motion: {
+        acceleration: event.acceleration,
+        accelerationIncludingGravity: event.accelerationIncludingGravity, 
+        rotationRate: event.rotationRate,
+        interval: event.interval
       }
     })
   }
@@ -74,7 +99,7 @@ export default class Device extends React.Component<Props, State> {
   }
 
   public render() {
-    const { orientation, userProximity, deviceProximity } = this.state
+    const { orientation, motion, userProximity, deviceProximity } = this.state
 
     return (
       <div className={classnames(this.props.className, c.device)}>
@@ -96,6 +121,31 @@ export default class Device extends React.Component<Props, State> {
             <tr>
               <td>Absolute</td>
               <td>{orientation ? (orientation.absolute ? 'true' : 'false') : 'Unknown'}</td>
+            </tr>
+          </table>
+          <h2>Motion</h2>
+          <table>
+            <tr>
+              <td>Acceleration</td>
+              <td>{motion ? Math.round(motion.acceleration.x) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.acceleration.y) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.acceleration.z) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Acceleration (including gravity)</td>
+              <td>{motion ? Math.round(motion.accelerationIncludingGravity.x) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.accelerationIncludingGravity.y) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.accelerationIncludingGravity.z) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Interval</td>
+              <td>{motion ? Math.round(motion.interval) : 'Unknown'}</td>
+            </tr>
+            <tr>
+              <td>Rate of Rotation</td>
+              <td>{motion ? Math.round(motion.rotationRate.alpha) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.rotationRate.beta) : 'Unknown'}</td>
+              <td>{motion ? Math.round(motion.rotationRate.gamma) : 'Unknown'}</td>
             </tr>
           </table>
           <h2>User Proximity</h2>
