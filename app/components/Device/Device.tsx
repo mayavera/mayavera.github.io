@@ -10,10 +10,23 @@ interface Props extends MotionProps, OrientationProps, MagneticFieldProps {
   className?: string;
 }
 
-class Device extends React.Component<Props> {
+interface State {
+  position: Position;
+}
+
+class Device extends React.Component<Props, State> {
+  public readonly state: State = {}
+  public componentDidMount() {
+    navigator.geolocation.watchPosition(this.handlePositionChange)
+  }
+
+  private handlePositionChange = (position: Position) => {
+    this.setState({ position })
+  }
 
   public render() {
     const { orientation, motion, magneticField } = this.props
+    const { position } = this.state
 
     return (
       <div className={classnames(this.props.className, c.device)}>
@@ -80,6 +93,43 @@ class Device extends React.Component<Props> {
               <tr>
                 <td>Z</td>
                 <td>{Math.round(magneticField.z)}</td>
+              </tr>
+            </table>
+          </>}
+          {position && <>
+            <h2>Position</h2>
+            <table>
+              <tr>
+                <td>Timestamp</td>
+                <td>{new Date(position.timestamp).toLocaleString()}</td>
+              </tr>
+              <tr>
+                <td>Accuracy</td>
+                <td>{position.coords.accuracy}</td>
+              </tr>
+              <tr>
+                <td>Altitude</td>
+                <td>{position.coords.altitude}</td>
+              </tr>
+              <tr>
+                <td>Altitude Accuracy</td>
+                <td>{position.coords.altitudeAccuracy}</td>
+              </tr>
+              <tr>
+                <td>Heading</td>
+                <td>{position.coords.heading}</td>
+              </tr>
+              <tr>
+                <td>Latitude</td>
+                <td>{position.coords.latitude}</td>
+              </tr>
+              <tr>
+                <td>Longitude</td>
+                <td>{position.coords.longitude}</td>
+              </tr>
+              <tr>
+                <td>Speed</td>
+                <td>{position.coords.speed}</td>
               </tr>
             </table>
           </>}
