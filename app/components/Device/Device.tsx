@@ -104,72 +104,80 @@ export default class Device extends React.Component<Props, State> {
     return (
       <div className={classnames(this.props.className, c.device)}>
         <div>
-          <h2>Orientation</h2>
-          <table>
-            <tr>
-              <td>Alpha</td>
-              <td>{orientation ? Math.round(orientation.alpha) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Beta</td>
-              <td>{orientation ? Math.round(orientation.beta) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Gamma</td>
-              <td>{orientation ? Math.round(orientation.gamma) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Absolute</td>
-              <td>{orientation ? (orientation.absolute ? 'true' : 'false') : 'Unknown'}</td>
-            </tr>
-          </table>
-          <h2>Motion</h2>
-          <table>
-            <tr>
-              <td>Acceleration</td>
-              <td>{motion ? Math.round(motion.acceleration.x) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.acceleration.y) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.acceleration.z) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Acceleration (including gravity)</td>
-              <td>{motion ? Math.round(motion.accelerationIncludingGravity.x) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.accelerationIncludingGravity.y) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.accelerationIncludingGravity.z) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Interval</td>
-              <td>{motion ? Math.round(motion.interval) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Rate of Rotation</td>
-              <td>{motion ? Math.round(motion.rotationRate.alpha) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.rotationRate.beta) : 'Unknown'}</td>
-              <td>{motion ? Math.round(motion.rotationRate.gamma) : 'Unknown'}</td>
-            </tr>
-          </table>
-          <h2>User Proximity</h2>
-          <table>
-            <tr>
-              <td>User Near</td>
-              <td>{userProximity ? userProximity.userNear : 'Unknown'}</td>
-            </tr>
-          </table>
-          <h2>Device Proximity</h2>
-          <table>
-            <tr>
-              <td>Min</td>
-              <td>{deviceProximity ? Math.round(deviceProximity.deviceMin) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Max</td>
-              <td>{deviceProximity ? Math.round(deviceProximity.deviceMax) : 'Unknown'}</td>
-            </tr>
-            <tr>
-              <td>Value</td>
-              <td>{deviceProximity ? Math.round(deviceProximity.deviceValue) : 'Unknown'}</td>
-            </tr>
-          </table>
+          {orientation && <div>
+            <h2>Orientation</h2>
+            <table>
+              <tr>
+                <td>Alpha</td>
+                <td>{Math.round(orientation.alpha)}</td>
+              </tr>
+              <tr>
+                <td>Beta</td>
+                <td>{Math.round(orientation.beta)}</td>
+              </tr>
+              <tr>
+                <td>Gamma</td>
+                <td>{Math.round(orientation.gamma)}</td>
+              </tr>
+              <tr>
+                <td>Absolute</td>
+                <td>{orientation.absolute ? 'true' : 'false'}</td>
+              </tr>
+            </table>
+          </div>}
+          {motion && <>
+            <h2>Motion</h2>
+            <table>
+              <tr>
+                <td>Acceleration</td>
+                <td>{Math.round(motion.acceleration.x)}</td>
+                <td>{Math.round(motion.acceleration.y)}</td>
+                <td>{Math.round(motion.acceleration.z)}</td>
+              </tr>
+              <tr>
+                <td>Acceleration (including gravity)</td>
+                <td>{Math.round(motion.accelerationIncludingGravity.x)}</td>
+                <td>{Math.round(motion.accelerationIncludingGravity.y)}</td>
+                <td>{Math.round(motion.accelerationIncludingGravity.z)}</td>
+              </tr>
+              <tr>
+                <td>Interval</td>
+                <td>{Math.round(motion.interval)}</td>
+              </tr>
+              <tr>
+                <td>Rate of Rotation</td>
+                <td>{Math.round(motion.rotationRate.alpha)}</td>
+                <td>{Math.round(motion.rotationRate.beta)}</td>
+                <td>{Math.round(motion.rotationRate.gamma)}</td>
+              </tr>
+            </table>
+          </>}
+          {userProximity && <>
+            <h2>User Proximity</h2>
+            <table>
+              <tr>
+                <td>User Near</td>
+                <td>{userProximity.userNear}</td>
+              </tr>
+            </table>
+          </>}
+          {deviceProximity && <>
+            <h2>Device Proximity</h2>
+            <table>
+              <tr>
+                <td>Min</td>
+                <td>{Math.round(deviceProximity.deviceMin)}</td>
+              </tr>
+              <tr>
+                <td>Max</td>
+                <td>{Math.round(deviceProximity.deviceMax)}</td>
+              </tr>
+              <tr>
+                <td>Value</td>
+                <td>{Math.round(deviceProximity.deviceValue)}</td>
+              </tr>
+            </table>
+          </>}
         </div>
       </div>
     )
