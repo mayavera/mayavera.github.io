@@ -19,14 +19,6 @@ interface State {
     rotationRate: DeviceRotationRate;
     interval: number;
   };
-  deviceProximity?: {
-    deviceMax: number;
-    deviceMin: number;
-    deviceValue: number;
-  };
-  userProximity?: {
-    userNear: boolean;
-  };
 }
 
 export default class Device extends React.Component<Props, State> {
@@ -40,9 +32,6 @@ export default class Device extends React.Component<Props, State> {
     if ((window as any).DeviceMotionEvent) {
       window.addEventListener("devicemotion", this.handleMotionChange);
     }
-
-    window.addEventListener('deviceproximity', this.handleDeviceProximityChange)
-    window.addEventListener('userproximity', this.handleUserProximityChange)
   }
 
   public componentWillUnmount() {
@@ -53,9 +42,6 @@ export default class Device extends React.Component<Props, State> {
     if ((window as any).DeviceMotionEvent) {
       window.removeEventListener("devicemotion", this.handleMotionChange);
     }
-
-    window.removeEventListener('deviceproximity', this.handleDeviceProximityChange)
-    window.removeEventListener('userproximity', this.handleUserProximityChange)
   }
 
   private handleOrientationChange = (event: DeviceOrientationEvent) => {
@@ -80,26 +66,8 @@ export default class Device extends React.Component<Props, State> {
     })
   }
 
-  private handleDeviceProximityChange = (event: any) => {
-    this.setState({
-      deviceProximity: {
-        deviceMax: event.max as number,
-        deviceMin: event.min as number,
-        deviceValue: event.value as number
-      }
-    })
-  }
-
-  private handleUserProximityChange = (event: any) => {
-    this.setState({
-      userProximity: {
-        userNear: event.near
-      }
-    });
-  }
-
   public render() {
-    const { orientation, motion, userProximity, deviceProximity } = this.state
+    const { orientation, motion } = this.state
 
     return (
       <div className={classnames(this.props.className, c.device)}>
@@ -149,32 +117,6 @@ export default class Device extends React.Component<Props, State> {
                 <td>{Math.round(motion.rotationRate.alpha)}</td>
                 <td>{Math.round(motion.rotationRate.beta)}</td>
                 <td>{Math.round(motion.rotationRate.gamma)}</td>
-              </tr>
-            </table>
-          </>}
-          {userProximity && <>
-            <h2>User Proximity</h2>
-            <table>
-              <tr>
-                <td>User Near</td>
-                <td>{userProximity.userNear}</td>
-              </tr>
-            </table>
-          </>}
-          {deviceProximity && <>
-            <h2>Device Proximity</h2>
-            <table>
-              <tr>
-                <td>Min</td>
-                <td>{Math.round(deviceProximity.deviceMin)}</td>
-              </tr>
-              <tr>
-                <td>Max</td>
-                <td>{Math.round(deviceProximity.deviceMax)}</td>
-              </tr>
-              <tr>
-                <td>Value</td>
-                <td>{Math.round(deviceProximity.deviceValue)}</td>
               </tr>
             </table>
           </>}
