@@ -3,16 +3,17 @@ import classnames from 'classnames'
 import { compose } from 'redux'
 import withMotion, { WrappedProps as MotionProps } from '../../hoc/withMotion'
 import withOrientation, { WrappedProps as OrientationProps } from '../../hoc/withOrientation'
+import withMagneticField, { WrappedProps as MagneticFieldProps} from '../../hoc/withMagneticField';
 import c from './Device.scss'
 
-interface Props extends MotionProps, OrientationProps {
+interface Props extends MotionProps, OrientationProps, MagneticFieldProps {
   className?: string;
 }
 
 class Device extends React.Component<Props> {
 
   public render() {
-    const { orientation, motion } = this.props
+    const { orientation, motion, magneticField } = this.props
 
     return (
       <div className={classnames(this.props.className, c.device)}>
@@ -65,6 +66,23 @@ class Device extends React.Component<Props> {
               </tr>
             </table>
           </>}
+          {magneticField && <>
+            <h2>MagneticField</h2>
+            <table>
+              <tr>
+                <td>X</td>
+                <td>{Math.round(magneticField.x)}</td>
+              </tr>
+              <tr>
+                <td>Y</td>
+                <td>{Math.round(magneticField.y)}</td>
+              </tr>
+              <tr>
+                <td>Z</td>
+                <td>{Math.round(magneticField.z)}</td>
+              </tr>
+            </table>
+          </>}
         </div>
       </div>
     )
@@ -73,5 +91,6 @@ class Device extends React.Component<Props> {
 
 export default compose(
   withMotion,
-  withOrientation
+  withOrientation,
+  withMagneticField(60)
 )(Device)
